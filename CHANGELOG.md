@@ -4,7 +4,7 @@ All notable changes to Mechanisms are recorded here.
 
 ## Unreleased
 
-- Keep future user-visible changes here before cutting a release or local deployment.
+- Added `/mech unlockrecipes [player]` to open registered Mechanisms recipes in the recipe book manually.
 
 ## 0.1.0 - 2026-06-19
 

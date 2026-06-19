@@ -71,13 +71,14 @@ public final class MechanismRecipeService {
         return RECIPE_NAMES;
     }
 
-    public void discoverAll(Player player) {
+    public int discoverAll(Player player) {
         if (!config.recipesEnabled()) {
-            return;
+            return 0;
         }
         for (String name : RECIPE_NAMES) {
             player.discoverRecipe(key(name));
         }
+        return RECIPE_NAMES.size();
     }
 
     public RecipeInfo recipeInfo(MechanismBlockType type) {

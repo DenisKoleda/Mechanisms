@@ -17,6 +17,7 @@ import com.denis.mechanisms.ui.MechanismMenu;
 import com.denis.mechanisms.ui.NetworkInspectorGui;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -36,7 +37,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public final class MechanismsCommand implements CommandExecutor, TabCompleter {
-    private static final List<String> SUBCOMMANDS = List.of("menu", "give", "recipes", "network", "doctor", "log", "perf", "wand", "wrench", "reload", "list", "stats", "debug", "selftest", "help");
+    private static final List<String> SUBCOMMANDS = List.of("menu", "give", "recipes", "unlockrecipes", "network", "doctor", "log", "perf", "wand", "wrench", "reload", "list", "stats", "debug", "selftest", "help");
 
     private final MechanismsPlugin plugin;
     private final MechanismsConfig config;
@@ -82,6 +83,7 @@ public final class MechanismsCommand implements CommandExecutor, TabCompleter {
         return switch (subcommand) {
             case "menu", "give" -> menu(sender);
             case "recipes" -> recipes(sender);
+            case "unlockrecipes" -> unlockRecipes(sender, args);
             case "network" -> network(sender);
             case "doctor" -> doctor(sender);
             case "log" -> log(sender, args);
@@ -111,6 +113,9 @@ public final class MechanismsCommand implements CommandExecutor, TabCompleter {
         }
         if (args.length == 2 && args[0].equalsIgnoreCase("log")) {
             return filter(List.of("last", "block"), args[1]);
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("unlockrecipes")) {
+            return filter(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList(), args[1]);
         }
         return List.of();
     }
@@ -172,6 +177,44 @@ public final class MechanismsCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(Component.text(wrench.name() + " x" + wrench.resultAmount(), NamedTextColor.YELLOW));
         sender.sendMessage(Component.text(String.join(" / ", wrench.shape()), NamedTextColor.WHITE));
         sender.sendMessage(Component.text(String.join(", ", wrench.legend()), NamedTextColor.GRAY));
+        return true;
+    }
+
+    private boolean unlockRecipes(CommandSender sender, String[] args) {
+        if (!config.recipesEnabled()) {
+            sender.sendMessage(Component.text("Рецепты Mechanisms отключены в конфиге.", NamedTextColor.RED));
+            return true;
+        }
+
+        Player target;
+        if (args.length >= 2) {
+            target = Bukkit.getPlayerExact(args[1]);
+            if (target == null) {
+                sender.sendMessage(Component.text("Игрок не найден: " + args[1], NamedTextColor.RED));
+                return true;
+            }
+            if (!sender.equals(target) && !has(sender, "mechanisms.admin")) {
+                sender.sendMessage(config.message("noPermission"));
+                return true;
+            }
+        } else if (sender instanceof Player player) {
+            if (!has(player, "mechanisms.use")) {
+                sender.sendMessage(config.message("noPermission"));
+                return true;
+            }
+            target = player;
+        } else {
+            sender.sendMessage(Component.text("Использование: /mech unlockrecipes <player>", NamedTextColor.RED));
+            return true;
+        }
+
+        int unlockedCount = recipeService.discoverAll(target);
+        if (sender.equals(target)) {
+            sender.sendMessage(Component.text("Открыто рецептов Mechanisms: " + unlockedCount, NamedTextColor.GREEN));
+        } else {
+            sender.sendMessage(Component.text("Открыто рецептов Mechanisms для " + target.getName() + ": " + unlockedCount, NamedTextColor.GREEN));
+            target.sendMessage(Component.text("Тебе открыли рецепты Mechanisms: " + unlockedCount, NamedTextColor.GREEN));
+        }
         return true;
     }
 
@@ -335,6 +378,7 @@ public final class MechanismsCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(Component.text("/mech menu - меню механизмов, выдача для admin/creative, рецепты для всех", NamedTextColor.GRAY));
         sender.sendMessage(Component.text("/mech give - алиас /mech menu", NamedTextColor.GRAY));
         sender.sendMessage(Component.text("/mech recipes - показать рецепты в чате", NamedTextColor.GRAY));
+        sender.sendMessage(Component.text("/mech unlockrecipes [player] - открыть рецепты в книге", NamedTextColor.GRAY));
         sender.sendMessage(Component.text("/mech network - инспектор сети блока, на который смотришь", NamedTextColor.GRAY));
         sender.sendMessage(Component.text("/mech doctor - диагностика сетей, chunk warning и последних ошибок", NamedTextColor.GRAY));
         sender.sendMessage(Component.text("/mech log last [n] - последние transfer/error события", NamedTextColor.GRAY));

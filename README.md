@@ -40,6 +40,7 @@ D:\Documents\Minecraft\server-dev\plugins\Mechanisms.jar
 /mech menu
 /mech give
 /mech recipes
+/mech unlockrecipes [player]
 /mech network
 /mech doctor
 /mech log last [limit]
@@ -55,7 +56,7 @@ D:\Documents\Minecraft\server-dev\plugins\Mechanisms.jar
 /mech help
 ```
 
-`/mech give` is a compatibility alias for `/mech menu`. Receiving items is limited to creative players or players with `mechanisms.give`/`mechanisms.admin`.
+`/mech give` is a compatibility alias for `/mech menu`. Receiving items is limited to creative players or players with `mechanisms.give`/`mechanisms.admin`. `/mech unlockrecipes` opens all registered Mechanisms recipes in the recipe book for yourself; targeting another online player requires `mechanisms.admin`.
 
 ## Permissions
 
