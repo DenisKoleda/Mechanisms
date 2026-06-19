@@ -1,0 +1,44 @@
+debug: false
+
+logistics:
+  enabled: true
+  tickInterval: 10
+  itemsPerTransfer: 8
+  fastPipeItemsPerTransfer: 16
+  expressPipeItemsPerTransfer: 32
+  maxTransfersPerTick: 32
+  maxNetworkNodes: 256
+  maxRouteLength: 128
+  allowCrossChunk: true
+  allowUnloadedChunks: false
+  defaultFilterMode: WHITELIST
+  exactMetaDefault: false
+
+visuals:
+  enabled: true
+  particles: true
+  itemDisplayEcho: true
+  itemDisplayScale: 0.35
+  sounds: false
+
+recipes:
+  enabled: true
+  # easy, normal, expensive
+  profile: normal
+
+upgrades:
+  speedBonusPerLevel: 4
+  stackBonusPerLevel: 8
+  priorityBonusPerLevel: 10
+  rangeBonusPerLevel: 32
+  maxFilterPages: 4
+
+materials:
+  extractor: HOPPER
+  pipe: COPPER_GRATE
+  pipeFast: EXPOSED_COPPER_GRATE
+  pipeExpress: OXIDIZED_COPPER_GRATE
+  router: TARGET
+  inserter: DROPPER
+  overflow: BARREL
+  trash: CAULDRON

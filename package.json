@@ -1,0 +1,16 @@
+{
+  "name": "mechanisms-e2e",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "e2e:connect": "node e2e/connect-smoke.mjs",
+    "e2e:logistics": "node e2e/logistics-scenarios.mjs"
+  },
+  "dependencies": {
+    "minecraft-data": "^3.111.0",
+    "mineflayer": "^4.37.1",
+    "minecraft-protocol": "^1.66.2",
+    "vec3": "^0.1.10"
+  }
+}

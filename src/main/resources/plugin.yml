@@ -1,0 +1,32 @@
+name: Mechanisms
+version: ${version}
+main: com.denis.mechanisms.MechanismsPlugin
+api-version: '26.2'
+authors:
+  - denis
+description: Server-side mechanism blocks for Paper/Purpur 26.2.
+commands:
+  mech:
+    description: Mechanisms commands
+    usage: /mech help
+    permission-message: Нет прав для Mechanisms.
+permissions:
+  mechanisms.use:
+    description: Allows using mechanism blocks and status tools.
+    default: true
+  mechanisms.admin:
+    description: Allows all Mechanisms administrative commands.
+    default: op
+    children:
+      mechanisms.give: true
+      mechanisms.reload: true
+      mechanisms.debug: true
+  mechanisms.give:
+    description: Allows receiving mechanism items from /mech menu and /mech wand.
+    default: op
+  mechanisms.reload:
+    description: Allows using /mech reload.
+    default: op
+  mechanisms.debug:
+    description: Allows using /mech debug on|off.
+    default: op
